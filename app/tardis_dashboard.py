@@ -13,7 +13,7 @@ if "page" not in st.session_state:
 
 
 def load_model():
-    model = jl.load("model.pkl")
+    model = jl.load("notebooks/model.pkl")
     if model is None:
         st.error("Model not found")
         st.stop()
@@ -21,7 +21,7 @@ def load_model():
 
 
 def load_comments_model():
-    model = jl.load("comments_model.pkl")
+    model = jl.load("notebooks/comments_model.pkl")
     if model is None:
         st.error("Model not found")
         st.stop()
@@ -648,7 +648,7 @@ def show_dashboard():
 
 
 def load_cities():
-    csv_path = "list.csv"
+    csv_path = "csv_files/list.csv"
     cities_df = pd.read_csv(csv_path, delimiter=";")
     cities_list = []
     for _, row in cities_df.iterrows():
@@ -663,9 +663,9 @@ def load_cities():
 
 
 if __name__ == "__main__":
-    df = pd.read_csv("cleaned_dataset.csv", delimiter=",")
-    comments_df = pd.read_csv("comments_dataset.csv")
-    text_df = pd.read_csv("comments.csv")
+    df = pd.read_csv("notebooks/cleaned_dataset.csv", delimiter=",")
+    comments_df = pd.read_csv("notebooks/comments_dataset.csv")
+    text_df = pd.read_csv("csv_files/comments.csv")
     target_cities = load_cities()
     model = load_model()
     comments_model = load_comments_model()
