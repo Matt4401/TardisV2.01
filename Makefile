@@ -10,7 +10,7 @@ NOTEBOOK_DIR := notebooks
 OUTPUT_DIR := executed
 EXECUTED_FILES := $(wildcard $(NOTEBOOK_DIR)/$(OUTPUT_DIR)/*.ipynb)
 EXEC_NOTEBOOKS := $(patsubst $(NOTEBOOK_DIR)/%.ipynb,$(OUTPUT_DIR)/%.ipynb,$(NOTEBOOKS))
-STREAMLIT_APP := app/tardis_dashboard.py
+STREAMLIT_APP := app/dashboard.py
 
 .PHONY: all notebook notebooks streamlit clean
 
