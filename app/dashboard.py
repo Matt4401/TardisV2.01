@@ -618,13 +618,13 @@ def show_home():
     if prediction < 0:
         st.write("# En Avance")
         st.markdown(
-            f"Votre train sera en **avance** de: <span style='color:green'>**{format_time(-prediction)}**</span> (train is early)",
+            f"Votre train sera en **avance** de: <span style='color:green'>**{format_time(-prediction)}**</span>",
             unsafe_allow_html=True,
         )
     else:
         st.write("### En Retard")
         st.markdown(
-            f"Votre train sera en **retard** de: <span style='color:red'>**{format_time(prediction)}**</span> (train is late)",
+            f"Votre train sera en **retard** de: <span style='color:red'>**{format_time(prediction)}**</span>",
             unsafe_allow_html=True,
         )
 
