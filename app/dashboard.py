@@ -251,22 +251,22 @@ def line(df, row_index):
 
 
 def select_itinary():
-    st.sidebar.header("Route Selection")
+    st.sidebar.header("Selection de l'itinéraire")
     route_combinations = df[["Departure station"]].drop_duplicates()
     route_names = [
         f"{row['Departure station']}" for _, row in route_combinations.iterrows()
     ]
-    selected_departure = st.sidebar.selectbox("From Where ?", route_names)
+    selected_departure = st.sidebar.selectbox("D'où partez vous ?", route_names)
     route_df = df[(df["Departure station"] == selected_departure)]
 
     available_arrival_stations = route_df["Arrival station"].unique()
     selected_arrival = st.sidebar.selectbox(
-        "To Where ?", available_arrival_stations, index=0
+        "Où allez vous ?", available_arrival_stations, index=0
     )
     route_df = route_df[route_df["Arrival station"] == selected_arrival]
 
     available_dates = ["ALL"] + list(route_df["Date"].unique())
-    selected_date = st.sidebar.selectbox("Select date", available_dates, index=0)
+    selected_date = st.sidebar.selectbox("Quand ?", available_dates, index=0)
     if selected_date == "ALL":
         st.header(
             "Données sur les trajet entre "
@@ -341,7 +341,7 @@ def get_comments_for_route(departure_station, arrival_station, date):
 
 
 def print_route_details(df, selected_index):
-    st.subheader("Month Route Details")
+    st.subheader("Détails mensuel du trajet")
     selected_row = df.iloc[selected_index]
     departure_station = selected_row["Departure station"]
     arrival_station = selected_row["Arrival station"]
@@ -350,61 +350,61 @@ def print_route_details(df, selected_index):
     col1, col2 = st.columns(2)
     with col1:
         st.write(f"**Date:** {selected_row['Date']}")
-        st.write(f"**Season:** {selected_row['Season']}")
+        st.write(f"**Saison:** {selected_row['Season']}")
         st.write(f"**Service:** {selected_row['Service']}")
-        st.write(f"**Departure station:** {departure_station}")
-        st.write(f"**Arrival station:** {arrival_station}")
+        st.write(f"**Gare de départ:** {departure_station}")
+        st.write(f"**Gare d'arrivée:** {arrival_station}")
     with col2:
         st.write(
-            f"**Number of scheduled trains:** {selected_row['Number of scheduled trains']}"
+            f"**Nombre de trains programmés:** {selected_row['Number of scheduled trains']}"
         )
         st.write(
-            f"**Number of cancelled trains:** {selected_row['Number of cancelled trains']}"
+            f"**Nombre de trains annulés:** {selected_row['Number of cancelled trains']}"
         )
         st.write(
-            f"**Number of trains at departure:** {selected_row['Number of trains delayed at departure']}"
+            f"**Nombre de trains en retard au départ:** {selected_row['Number of trains delayed at departure']}"
         )
         st.write(
-            f"**Number of trains at arrival:** {selected_row['Number of trains delayed at arrival']}"
+            f"**Nombre de trains en retard à l'arrivée:** {selected_row['Number of trains delayed at arrival']}"
         )
         st.write(
-            f"**Number of trains delayed > 15min:** {selected_row['Number of trains delayed > 15min']}"
+            f"**Nombre de trains avec un retard > 15min:** {selected_row['Number of trains delayed > 15min']}"
         )
         st.write(
-            f"**Number of trains delayed > 30min:** {selected_row['Number of trains delayed > 30min']}"
+            f"**Nombre de trains avec un retard > 30min:** {selected_row['Number of trains delayed > 30min']}"
         )
         st.write(
-            f"**Number of trains delayed > 60min:** {selected_row['Number of trains delayed > 60min']}"
+            f"**Nombre de trains avec un retard > 60min:** {selected_row['Number of trains delayed > 60min']}"
         )
-    st.subheader("Delay Analysis")
+    st.subheader("Analyse des retards")
     avg_delay_15min = round(
         selected_row["Average delay of trains > 15min (if competing with flights)"], 2
     )
-    st.write(f"**Average delay of trains > 15min:** {format_time(avg_delay_15min)}")
+    st.write(f"**Nombre de trains avec un retard > 15min:** {format_time(avg_delay_15min)}")
     col1, col2 = st.columns(2)
     with col1:
         avg_delay_dep = round(
             selected_row["Average delay of all trains at departure"], 2
         )
-        st.write(f"**Average delay at departure:**  {format_time(avg_delay_dep)}")
+        st.write(f"**Retard moyen des trains au départ:**  {format_time(avg_delay_dep)}")
         avg_delay_late_dep = round(
             selected_row["Average delay of late trains at departure"], 2
         )
         st.write(
-            f"**Average delay of late trains at departure** {format_time(avg_delay_late_dep)}"
+            f"**Retard moyen des trains en retard au départ:** {format_time(avg_delay_late_dep)}"
         )
     with col2:
         avg_delay_arr = round(selected_row["Average delay of all trains at arrival"], 2)
         st.write(
-            f"**Average delay of all trains at arrival:**  {format_time(avg_delay_arr)}"
+            f"**Retard moyen des trains à l'arrivée:**  {format_time(avg_delay_arr)}"
         )
         avg_delay_late_arr = round(
             selected_row["Average delay of late trains at arrival"], 2
         )
         st.write(
-            f"**Average delay of late trains at arrival:** {format_time(avg_delay_late_arr)}"
+            f"**Retard moyen des trains en retard à l'arrivée:** {format_time(avg_delay_late_arr)}"
         )
-    st.subheader("Delay Causes")
+    st.subheader("Causes des retards")
     causes = {
         "External causes": round(selected_row["Pct delay due to external causes"], 2),
         "Infrastructure": round(selected_row["Pct delay due to infrastructure"], 2),
@@ -428,17 +428,17 @@ def print_route_details(df, selected_index):
     causes_df = causes_df.sort_values("Percentage", ascending=False)
     st.bar_chart(causes_df.set_index("Cause"))
 
-    st.subheader("Comments")
+    st.subheader("Commentaires pour ce trajet")
     cancellation_comment, departure_comment, arrival_comment = get_comments_for_route(
         departure_station, arrival_station, date
     )
 
     if cancellation_comment is not None and pd.notna(cancellation_comment):
-        st.write(f"**Cancellation comments:** {cancellation_comment}")
+        st.write(f"**Commentaires des trajets annulés:** {cancellation_comment}")
     if departure_comment is not None and pd.notna(departure_comment):
-        st.write(f"**Departure delay comments:** {departure_comment}")
+        st.write(f"**Commentaires des retards au départ:** {departure_comment}")
     if arrival_comment is not None and pd.notna(arrival_comment):
-        st.write(f"**Arrival delay comments:** {arrival_comment}")
+        st.write(f"**Commentaires des retards à l'arrivée:** {arrival_comment}")
 
 
 def print_all_route_infos(df, selected_departure, selected_arrival):
@@ -614,7 +614,7 @@ def show_home():
     prediction = predict_delay(
         model, selected_departure, selected_arrival, selected_date.strftime("%Y-%m")
     )
-    st.subheader("Predicted Delay")
+    st.write("## Prévision de retard")
     if prediction < 0:
         st.write("# En Avance")
         st.markdown(
@@ -622,7 +622,7 @@ def show_home():
             unsafe_allow_html=True,
         )
     else:
-        st.write("# En Retard")
+        st.write("### En Retard")
         st.markdown(
             f"Votre train sera en **retard** de: <span style='color:red'>**{format_time(prediction)}**</span> (train is late)",
             unsafe_allow_html=True,
@@ -634,7 +634,7 @@ def show_home():
         selected_arrival,
         selected_date.strftime("%Y-%m"),
     )
-    st.write("# Cause")
+    st.write("### Cause")
     st.write(f"La plus probable : **{cause}**")
     st.write("---")
     line(df, selected_index)
@@ -671,11 +671,11 @@ if __name__ == "__main__":
     comments_model = load_comments_model()
     encoder, categorical_cols = load_encoder()
     st.set_page_config(page_title="Train Route Dashboard", layout="wide")
-    st.markdown("## Navigation")
+    st.markdown("# Bienvenue sur le tableau de bord de Tardis 🚆")
 
     col1, col2, col3 = st.columns(3)
     with col1:
-        if st.button("↩️ Home"):
+        if st.button("↩️ Accueil"):
             navigate_to("home")
     with col2:
         if st.button("🔍 Analyse"):
